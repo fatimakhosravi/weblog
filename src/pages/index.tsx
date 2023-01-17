@@ -1,6 +1,11 @@
+import resource from "../resource.json"
 
 const View = () => (
-    <p>landing</p>
+    <p>
+        {
+            resource.input_label.user_name
+        }
+    </p>
 );
 
 export default View;

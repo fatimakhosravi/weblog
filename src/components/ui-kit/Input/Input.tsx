@@ -1,50 +1,57 @@
+import classNames from "classnames";
 import React from "react";
 
 type InputProps = {
     label?: string | React.ReactNode;
-    hint_message?: string;
     error_message?: string;
-    icon?: React.ReactNode;
+    icon?: React.ElementType;
     className?: string;
     validator?: any;
-    hint_className?: string;
-    border_radius?: string;
-} & Omit<React.ComponentPropsWithoutRef<"input">, "size">;
+    name?: string;
+    placeholder?: string;
+    value?: string;
+    onChange?: (value: string) => null;
+    type?: string;
+};
 
 
-export const Input = React.forwardRef((props: InputProps, ref: React.Ref<HTMLInputElement>) => {
-    const { label, className, hint_message, error_message, icon = undefined, border_radius = "tw-rounded-lg", validator = undefined, hint_className } = props;
+export const Input: React.FC<InputProps> = ({ label, className, onChange, type, placeholder, name, value, error_message, icon: Icon = () => null, validator = undefined }) => {
+    const [onFocus, set_onFocus] = React.useState<boolean>();
+    const LabelStyles = `text-lg text-black font-bold `;
+    const InputStyles = `h-14 rounded-lg text-sm w-full`;
+    const staticStyle = `flex justify-end`;
 
-    const containerSize = "tw-w-full";
-    const staticStyle = `tw-flex tw-flex-row tw-items-center tw-justify-between tw-border-1 ${border_radius} tw-h-12 tw-border-solid tw-border-l-4 tw-border tw-border-custom-box-border tw-pr-4 tw-pl-3`;
-    let inputStyle = "";
-
-    if (label !== "" && label !== undefined) {
-        inputStyle = "tw-pt-5 tw-pb-1";
-    }
     return (
-        <div className="">
-            <div className={`tw-w-full ${staticStyle} ${error_message && "tw-border-l-custom-error"}`}>
-                <div className={"input-container tw-h-full tw-w-full"}>
-                    <input name={props.name} value={props.value ?? ""}
-                        autoComplete={"off"}
-                        onChange={props.onChange}
-                        className={`tw-h-full focus:tw-outline-none tw-border-none tw-text-sm tw-text-custom-text ${inputStyle} placeholder:tw-text-sm placeholder:tw-text-custom-input-text tw-w-full`}
-                        placeholder={label === undefined || label === "" ? props.placeholder : ""}
-                        type={props.type}
-                        onBlur={props.onBlur}
-                        onKeyUp={props.onKeyUp}
-                        ref={ref} />
-                    {label && <label className={`${props.value && error_message ? "errorFilled" : props.value ? "filled" : ""} ${props.required && "after:tw-content-['*'] after:tw-text-custom-error after:tw-ml-0.5 tw-block tw-text-sm tw-text-slate-700"}`}>{label}</label>}
+        <div>
+            <div className={classNames(className, `w-full ${error_message && "border-l-custom-error"}`)}>
+                <div className="pb-2">
+                    {label && <label className={classNames(className, LabelStyles, `${onFocus && "text-costume-green" || error_message && "placeholder:text-costume-red"}`)}>{label}</label>}
                 </div>
-                {icon && icon}
+
+                <div className={classNames(className, staticStyle)}>
+                    <div className="relative w-full">
+                        <input
+                            className={classNames(className, InputStyles, `border pr-16 ${onFocus && "placeholder:text-costume-green outline-costume-green" || error_message && "placeholder:text-costume-red outline-costume-red"}`)}
+                            name={name}
+                            placeholder={placeholder}
+                            value={value}
+                            onChange={(e) => onChange && onChange(e.target.value)}
+                            type={type}
+                            onBlur={() => set_onFocus(false)}
+                            onFocus={() => set_onFocus(true)}
+                        />
+                    </div>
+
+                    <div className="absolute">
+                        <Icon className={classNames(className, "m-5")} color={onFocus ? "#00C853" : error_message ? "#FE5656" : value ? "#000000" : "#333333"} opacity={onFocus || error_message || value ? 1 : 0.2} />
+                    </div>
+                </div>
             </div>
             {validator && validator}
 
-            <div >
-                {(error_message === undefined || error_message === "") && hint_message && <p className={"tw-text-custom-input-text tw-text-xs tw-pl-4 tw-leading-[1.875rem]"}>{hint_message}</p>}
-                {error_message && <p className={"tw-text-custom-error tw-text-xs tw-pl-4 tw-leading-[1.1rem]"}>{error_message}</p>}
+            <div className={classNames("min-h-[32px] text-left")}>
+                {error_message && <p className={"text-custom-error text-xs pl-4 leading-[1.1rem]"}>{error_message}</p>}
             </div>
         </div>
     );
-});
+};
