@@ -4,7 +4,8 @@ import React from "react";
 type InputProps = {
     label?: string | React.ReactNode;
     error_message?: string;
-    icon?: React.ElementType;
+    first_icon?: React.ElementType;
+    second_icon?: React.ElementType;
     className?: string;
     validator?: any;
     name?: string;
@@ -14,42 +15,32 @@ type InputProps = {
     type?: string;
 };
 
-
-export const Input: React.FC<InputProps> = ({ label, className, onChange, type, placeholder, name, value, error_message, icon: Icon = () => null, validator = undefined }) => {
+export const Input: React.FC<InputProps> = ({ label, className, onChange, type, placeholder, name, value, error_message, first_icon: FirstIcon = () => null, second_icon: SecondIcon = () => null, validator = undefined }) => {
     const [onFocus, set_onFocus] = React.useState<boolean>();
-    const LabelStyles = `text-lg text-black font-bold `;
-    const InputStyles = `h-14 rounded-lg text-sm w-full`;
-    const staticStyle = `flex justify-end`;
 
     return (
-        <div>
-            <div className={classNames(className, `w-full ${error_message && "border-l-custom-error"}`)}>
-                <div className="pb-2">
-                    {label && <label className={classNames(className, LabelStyles, `${onFocus && "text-costume-green" || error_message && "placeholder:text-costume-red"}`)}>{label}</label>}
-                </div>
-
-                <div className={classNames(className, staticStyle)}>
-                    <div className="relative w-full">
-                        <input
-                            className={classNames(className, InputStyles, `border pr-16 ${onFocus && "placeholder:text-costume-green outline-costume-green" || error_message && "placeholder:text-costume-red outline-costume-red"}`)}
-                            name={name}
-                            placeholder={placeholder}
-                            value={value}
-                            onChange={(e) => onChange && onChange(e.target.value)}
-                            type={type}
-                            onBlur={() => set_onFocus(false)}
-                            onFocus={() => set_onFocus(true)}
-                        />
-                    </div>
-
-                    <div className="absolute">
-                        <Icon className={classNames(className, "m-5")} color={onFocus ? "#00C853" : error_message ? "#FE5656" : value ? "#000000" : "#333333"} opacity={onFocus || error_message || value ? 1 : 0.2} />
-                    </div>
+        <div className={classNames(className)}>
+            {label && <label className={`text-lg font-bold font-iranyekan ${onFocus && "text-[#00C853]" || error_message && "text-[#FE5656]"}`}>{label}</label>}
+            <div className={`w-[386px] flex flex-row items-center border rounded-[15px] mt-2 ${onFocus && "border-[#00C853]" || error_message && "border-[#FE5656]"} `}>
+                <div className="pr-4">
+                    <FirstIcon color={onFocus ? "#00C853" : error_message ? "#FE5656" : "#333333"} opacity={onFocus || error_message || value ? 1 : 0.2} />
+                </div >
+                <input
+                    className={classNames(`placeholder:font-iranyekan border-none pr-7 h-14 ${onFocus && "placeholder:opacity-0 focus:outline-none outline-[#00C853] caret-[#00C853]" || error_message && "placeholder:opacity-0 outline-none caret-[#FE5656]"}`)}
+                    name={name}
+                    placeholder={placeholder}
+                    value={value}
+                    onChange={(e) => onChange && onChange(e.target.value)}
+                    type={type}
+                    onBlur={() => set_onFocus(false)}
+                    onFocus={() => set_onFocus(true)}
+                />
+                <div className="pl-4">
+                    <SecondIcon color={onFocus ? "#00C853" : error_message ? "#FE5656" : "#333333"} opacity={onFocus || error_message || value ? 1 : 0.2} />
                 </div>
             </div>
             {validator && validator}
-
-            <div className={classNames("min-h-[32px] text-left")}>
+            <div className={"min-h-[32px] text-right"}>
                 {error_message && <p className={"text-custom-error text-xs pl-4 leading-[1.1rem]"}>{error_message}</p>}
             </div>
         </div>
