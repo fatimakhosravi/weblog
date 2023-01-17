@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: "IRANYekan";
+    src: url("../../public/font/iran-yekan/ttf/IRANYekanWebRegular.ttf") format("truetype");
+}
