@@ -1,12 +1,13 @@
 import { Icon } from "./model";
 
-export const LockIcon: React.FC<Icon> = ({ color, opacity = 1 }) => (
+export const LockIcon: React.FC<Icon> = ({ color, opacity = 1, className }) => (
 
     <svg
         width={18}
         height={22}
         fill={color}
         xmlns="http://www.w3.org/2000/svg"
+        className={className}
     >
         <path
             fillRule="evenodd"
@@ -23,7 +24,5 @@ export const LockIcon: React.FC<Icon> = ({ color, opacity = 1 }) => (
             fillOpacity={opacity}
         />
     </svg>
-
-
 );
 
